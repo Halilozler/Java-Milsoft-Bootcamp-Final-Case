@@ -7,3 +7,50 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/godorodb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=mysecretpassword
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=test
+      - SPRING_DATA_MONGODB_USERNAME=admin
+      - SPRING_DATA_MONGODB_PASSWORD=password
+    depends_on:
+      - db
+      - mongodb
+    networks:
+      - app-network
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=godorodb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=test
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+  mongodb-data:
+
+networks:
+  app-network:
+
