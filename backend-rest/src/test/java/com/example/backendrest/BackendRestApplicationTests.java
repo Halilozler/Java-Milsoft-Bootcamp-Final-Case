@@ -1,10 +1,10 @@
-package com.example.javamilsoftbootcampfinalcase;
+package com.example.backendrest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JavaMilsoftBootcampFinalCaseApplicationTests {
+class BackendRestApplicationTests {
 
     @Test
     void contextLoads() {
