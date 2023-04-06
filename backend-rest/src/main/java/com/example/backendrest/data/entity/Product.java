@@ -1,5 +1,6 @@
 package com.example.backendrest.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,9 +13,16 @@ public class Product {
     private String productName;
     private double salesPrice;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Category category;
-
     public Product() {}
+
+    public Product(String productName, double salesPrice, Category category) {
+        this.productName = productName;
+        this.salesPrice = salesPrice;
+        this.category = category;
+    }
+
     public long getProductId() {
         return ProductId;
     }

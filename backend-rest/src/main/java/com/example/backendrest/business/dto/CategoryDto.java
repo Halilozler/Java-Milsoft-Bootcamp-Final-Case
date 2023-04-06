@@ -7,7 +7,6 @@ import java.util.List;
 public class CategoryDto {
     private long categoryId;
     private String categoryName;
-    private List<Product> productList;
 
     public CategoryDto() {
     }
@@ -26,13 +25,5 @@ public class CategoryDto {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
     }
 }

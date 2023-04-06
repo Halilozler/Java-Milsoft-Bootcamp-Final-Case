@@ -5,7 +5,7 @@ import com.example.backendrest.data.entity.Product;
 
 public class CartProductDto {
     private long cartProductId;
-    //private Cart cart;
+    private Cart cart;
     private Product product;
     private int salesQuantity;
 }
