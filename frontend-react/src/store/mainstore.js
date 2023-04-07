@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-
 };
 
 export const mainStore = createSlice({
@@ -23,5 +22,5 @@ export const mainStore = createSlice({
     },
 });
 
-export const { increment, setNum, getNum } = mainStore.actions;
+export const { setCategoryName } = mainStore.actions;
 export default mainStore.reducer;
