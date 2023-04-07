@@ -20,6 +20,7 @@ import com.example.backendrest.data.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartProductServiceImpl implements CartProductService {
@@ -34,13 +35,14 @@ public class CartProductServiceImpl implements CartProductService {
     }
 
     @Override
+    @Transactional
     public BaseResponse<CartProductDto> removeCartProduct(long cartId, long productId) {
         CartProduct cartProduct = cartProductRepository.findCartProduct(cartId, productId);
         if(cartProduct == null){
             return BaseResponse.fail("Cart-Product not found", 404);
         }
         //cartProduct = cartProductRepository.findById(cartProduct.getCartProductId()).orElseThrow(() -> new NotFoundException("Cart-Product not found"));;
-        cartProductRepository.delete(cartProduct);
+        cartProductRepository.writeDelete(cartProduct.getCartProductId());
         return BaseResponse.Success(CartProductMapper.INSTANCE.cartProductTocartProductDto(cartProduct), 200);
     }
 
