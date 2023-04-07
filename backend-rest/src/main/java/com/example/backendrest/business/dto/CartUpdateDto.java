@@ -1,17 +1,19 @@
 package com.example.backendrest.business.dto;
 
 import com.example.backendrest.data.entity.Cart;
-import com.example.backendrest.data.entity.CartProduct;
 
-import java.util.List;
-
-public class CartDto {
+public class CartUpdateDto {
     private long cartId;
     private String customerName;
     private String cardNumber;
     private Cart.CartStatus cartStatus;
 
-    public CartDto() {
+    public Cart.CartStatus getCartStatus() {
+        return cartStatus;
+    }
+
+    public void setCartStatus(Cart.CartStatus cartStatus) {
+        this.cartStatus = Cart.CartStatus.COMPLETED;
     }
 
     public long getCartId() {
@@ -35,17 +37,6 @@ public class CartDto {
     }
 
     public void setCardNumber(String cardNumber) {
-        if(cardNumber.length() < 16){
-            throw new IllegalArgumentException("Card number must be at least 16 characters long.");
-        }
         this.cardNumber = cardNumber;
-    }
-
-    public Cart.CartStatus getCartStatus() {
-        return cartStatus;
-    }
-
-    public void setCartStatus(Cart.CartStatus cartStatus) {
-        this.cartStatus = cartStatus;
     }
 }

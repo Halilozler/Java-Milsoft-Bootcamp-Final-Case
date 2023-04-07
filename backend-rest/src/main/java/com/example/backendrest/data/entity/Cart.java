@@ -15,13 +15,17 @@ public class Cart {
     private CartStatus cartStatus;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartProduct> cartProducts;
-
-    public Cart() {}
-
     // CartStatus enum
     public enum CartStatus {
         NEW,
         COMPLETED
+    }
+    public Cart() {}
+
+    public Cart(String customerName, String cardNumber, CartStatus cartStatus) {
+        this.customerName = customerName;
+        this.cardNumber = cardNumber;
+        this.cartStatus = cartStatus;
     }
 
     public long getCartId() {
