@@ -1,9 +1,12 @@
 package com.example.backendrest;
 
 import com.example.backendrest.data.entity.Category;
+import com.example.backendrest.data.entity.ERole;
 import com.example.backendrest.data.entity.Product;
+import com.example.backendrest.data.entity.Role;
 import com.example.backendrest.data.repository.CategoryRepository;
 import com.example.backendrest.data.repository.ProductRepository;
+import com.example.backendrest.data.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -56,6 +59,26 @@ public class BackendRestApplication {
                 productRepository.save(new Product("Elbise", 699.99, category3));
                 productRepository.save(new Product("Pantolon", 399.99, category3));
                 productRepository.save(new Product("Gömlek", 499.99, category3));
+            }
+        };
+    }
+    @Bean
+    CommandLineRunner init(RoleRepository roleRepository) {
+        return args -> {
+            if (!roleRepository.findByName(ERole.ROLE_USER).isPresent()) {
+                Role roleUser = new Role();
+                roleUser.setName(ERole.ROLE_USER);
+                roleRepository.save(roleUser);
+            }
+            if (!roleRepository.findByName(ERole.ROLE_MODERATOR).isPresent()) {
+                Role roleModerator = new Role();
+                roleModerator.setName(ERole.ROLE_MODERATOR);
+                roleRepository.save(roleModerator);
+            }
+            if (!roleRepository.findByName(ERole.ROLE_ADMIN).isPresent()) {
+                Role roleAdmin = new Role();
+                roleAdmin.setName(ERole.ROLE_ADMIN);
+                roleRepository.save(roleAdmin);
             }
         };
     }

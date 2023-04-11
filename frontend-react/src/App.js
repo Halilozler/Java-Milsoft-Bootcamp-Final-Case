@@ -1,19 +1,15 @@
 import React, { useEffect } from "react";
+import Navbar from "./Navbar";
+import CategoriesComponent from "./components/Inventory/Category/CategoriesComponent";
+import ProductsComponent from "./components/Inventory/Product/ProductsComponent";
 import { Outlet } from "react-router-dom";
+import Index from "./components/Inventory/Index";
 
 function App() {
-  let year = new Date().getFullYear();
   return (
-  <div className='appScreen'>
-        <header>
-            <h1>MilSOFTBurada</h1>
-        </header>
-        <body>
-          <Outlet/>
-        </body>
-        <footer>
-            <p>© {year} MilSOFTBurada Tüm Haklar Saklıdır</p>
-        </footer>
+    <div className='appScreen'>
+      <Navbar/>
+      <Index/>
     </div>
   );
 }

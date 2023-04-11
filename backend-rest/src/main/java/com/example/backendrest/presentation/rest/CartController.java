@@ -3,13 +3,17 @@ package com.example.backendrest.presentation.rest;
 import com.example.backendrest.base.response.BaseResponse;
 import com.example.backendrest.business.dto.CartDto;
 import com.example.backendrest.business.dto.CartProductDto;
+import com.example.backendrest.business.dto.CartProductGetDto;
 import com.example.backendrest.business.dto.CartUpdateDto;
 import com.example.backendrest.business.service.abstracts.CartProductService;
 import com.example.backendrest.business.service.abstracts.CartService;
 import com.example.backendrest.business.service.concretes.CartServiceImpl;
 import com.example.backendrest.business.service.concretes.CartProductServiceImpl;
 import com.example.backendrest.data.entity.Cart;
+import com.example.backendrest.data.entity.CartProduct;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -24,6 +28,16 @@ public class CartController {
     @GetMapping("/get/{cartId}")
     public BaseResponse<CartDto> getCartById(@PathVariable("cartId") long cartId){
         return cartService.getCart(cartId);
+    }
+
+    @GetMapping("/get/complete/{cartId}")
+    public BaseResponse<List<CartProductGetDto>> getCompleteCartProduct(@PathVariable("cartId") long cartId){
+        return cartproductService.getCompleteProductById(cartId);
+    }
+
+    @GetMapping("/get/new/{cartId}")
+    public BaseResponse<List<CartProductGetDto>> getNewCartProduct(@PathVariable("cartId") long cartId){
+        return cartproductService.getNewProductById(cartId);
     }
 
     @PostMapping("/add/{cartId}/{productId}")

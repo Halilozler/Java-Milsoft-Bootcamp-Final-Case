@@ -2,8 +2,11 @@ package com.example.backendrest.business.service.abstracts;
 
 import com.example.backendrest.base.response.BaseResponse;
 import com.example.backendrest.business.dto.CartDto;
+import com.example.backendrest.business.dto.CartProductDto;
 import com.example.backendrest.business.dto.CartUpdateDto;
 import com.example.backendrest.data.entity.Cart;
+
+import java.util.List;
 
 public interface CartService {
     BaseResponse<CartDto> getCart(long cartId);

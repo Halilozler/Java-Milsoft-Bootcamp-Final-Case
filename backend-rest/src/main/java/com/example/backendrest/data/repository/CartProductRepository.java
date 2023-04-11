@@ -1,5 +1,6 @@
 package com.example.backendrest.data.repository;
 
+import com.example.backendrest.data.entity.Cart;
 import com.example.backendrest.data.entity.CartProduct;
 import com.example.backendrest.data.entity.Product;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,4 +18,7 @@ public interface CartProductRepository extends CrudRepository<CartProduct, Long>
     @Modifying
     @Query("DELETE FROM CartProduct cp WHERE cp.cartProductId = :cartProductId")
     void writeDelete(@Param("cartProductId") long cartProductId);
+
+    @Query("select cp from CartProduct cp where cp.cart.cartId = :cartId and cp.cart.cartStatus = :status")
+    public List<CartProduct> getCartProduct(@Param("cartId") long cartId, @Param("status") Cart.CartStatus status);
 }
