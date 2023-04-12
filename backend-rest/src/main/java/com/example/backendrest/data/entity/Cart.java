@@ -1,7 +1,9 @@
 package com.example.backendrest.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -9,23 +11,35 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cartId;
-    private String customerName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Users users;
     private String cardNumber;
     @Enumerated(EnumType.STRING)
     private CartStatus cartStatus;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<CartProduct> cartProducts;
-    // CartStatus enum
-    public enum CartStatus {
-        NEW,
-        COMPLETED
-    }
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+
     public Cart() {}
 
-    public Cart(String customerName, String cardNumber, CartStatus cartStatus) {
-        this.customerName = customerName;
+    public Cart(String cardNumber, CartStatus cartStatus) {
         this.cardNumber = cardNumber;
         this.cartStatus = cartStatus;
+    }
+
+    public Cart(String cardNumber, CartStatus cartStatus, Date createdDate) {
+        this.cardNumber = cardNumber;
+        this.cartStatus = cartStatus;
+        this.createdDate = createdDate;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public long getCartId() {
@@ -36,12 +50,12 @@ public class Cart {
         cartId = cartId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Users getUsers() {
+        return users;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     public String getCardNumber() {

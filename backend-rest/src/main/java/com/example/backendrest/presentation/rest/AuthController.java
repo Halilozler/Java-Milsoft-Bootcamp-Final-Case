@@ -1,6 +1,7 @@
 package com.example.backendrest.presentation.rest;
 
 import com.example.backendrest.base.Util.JwtUtils;
+import com.example.backendrest.base.response.BaseResponse;
 import com.example.backendrest.business.dto.JwtResponse;
 import com.example.backendrest.business.dto.LoginRequest;
 import com.example.backendrest.business.dto.MessageResponse;
@@ -8,7 +9,7 @@ import com.example.backendrest.business.dto.SignupRequest;
 import com.example.backendrest.business.service.concretes.UserDetailsImpl;
 import com.example.backendrest.data.entity.ERole;
 import com.example.backendrest.data.entity.Role;
-import com.example.backendrest.data.entity.User;
+import com.example.backendrest.data.entity.Users;
 import com.example.backendrest.data.repository.RoleRepository;
 import com.example.backendrest.data.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -58,11 +59,10 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(BaseResponse.Success(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+                userDetails.getEmail()), 200));
     }
 
     @PostMapping("/signup")
@@ -80,10 +80,16 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
+        Users user = new Users(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
-
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
+        userRepository.save(user);
+        /*
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -112,11 +118,11 @@ public class AuthController {
                         roles.add(userRole);
                 }
             });
+
         }
-
-        user.setRoles(roles);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        */
+        return ResponseEntity.ok(
+                BaseResponse.Success("User registered successfully!", 201)
+        );
     }
 }

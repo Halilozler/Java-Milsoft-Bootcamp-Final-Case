@@ -1,16 +1,16 @@
 package com.example.backendrest.presentation.rest;
 
+import com.example.backendrest.base.Util.JwtUtils;
 import com.example.backendrest.base.response.BaseResponse;
-import com.example.backendrest.business.dto.CartDto;
-import com.example.backendrest.business.dto.CartProductDto;
-import com.example.backendrest.business.dto.CartProductGetDto;
-import com.example.backendrest.business.dto.CartUpdateDto;
+import com.example.backendrest.business.dto.*;
 import com.example.backendrest.business.service.abstracts.CartProductService;
 import com.example.backendrest.business.service.abstracts.CartService;
 import com.example.backendrest.business.service.concretes.CartServiceImpl;
 import com.example.backendrest.business.service.concretes.CartProductServiceImpl;
 import com.example.backendrest.data.entity.Cart;
 import com.example.backendrest.data.entity.CartProduct;
+import com.example.backendrest.data.entity.CartStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,42 +20,100 @@ import java.util.List;
 public class CartController {
     private CartProductService cartproductService;
     private CartService cartService;
-    public CartController(CartProductService cartproductService, CartService cartService) {
+    private JwtUtils jwtUtils;
+
+    public CartController(CartProductService cartproductService, CartService cartService, JwtUtils jwtUtils) {
         this.cartproductService = cartproductService;
         this.cartService = cartService;
+        this.jwtUtils = jwtUtils;
     }
 
-    @GetMapping("/get/{cartId}")
-    public BaseResponse<CartDto> getCartById(@PathVariable("cartId") long cartId){
-        return cartService.getCart(cartId);
+    //cart oluşturur.
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/get")
+    public BaseResponse<Cart> getCartById(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+
+        return cartService.getCart(userId);
     }
 
-    @GetMapping("/get/complete/{cartId}")
-    public BaseResponse<List<CartProductGetDto>> getCompleteCartProduct(@PathVariable("cartId") long cartId){
-        return cartproductService.getCompleteProductById(cartId);
+    //siperişi verdiğimiz cartları getirir.
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/get/completed")
+    public BaseResponse<List<CartProductCompleteDto>> getCompleteCartProduct(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        //token içinden bir veri almak için:
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.getCompleteProductById(userId);
     }
 
-    @GetMapping("/get/new/{cartId}")
-    public BaseResponse<List<CartProductGetDto>> getNewCartProduct(@PathVariable("cartId") long cartId){
-        return cartproductService.getNewProductById(cartId);
+    //cartı complete çekmek isterse:
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/set/completed")
+    public BaseResponse<Boolean> setCompleted(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartService.setCartCompleted(userId);
     }
-
-    @PostMapping("/add/{cartId}/{productId}")
-    public BaseResponse<CartProductDto> addCart(@PathVariable("cartId") long cartId, @PathVariable("productId") long productId){
-        return cartproductService.addCartProduct(cartId, productId);
+    //**
+    //sepeteki(new olan) ürünleri getirir.
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/get/new")
+    public BaseResponse<List<CartProductGetDto>> getNewCartProduct(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.getNewProductById(userId);
     }
-
-    @DeleteMapping("/remove/{cartId}/{productId}")
-    public BaseResponse<CartProductDto> removeCartAndProduct(@PathVariable("cartId") long cartId, @PathVariable("productId") long productId){
-        return cartproductService.removeCartProduct(cartId, productId);
+    //**
+    //carta ürün ekler.
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/add/{productId}")
+    public BaseResponse<CartProductDto> addCart(@PathVariable("productId") long productId, @RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.addCartProduct(productId, userId);
     }
-
+    //**
+    //cartan new ürün silmek isterse.
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/remove/{productId}")
+    public BaseResponse<CartProductDto> removeCartAndProduct(@PathVariable("productId") long productId, @RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.removeCartProduct(productId, userId);
+    }
+    //**
+    //cart bilgileri değiştiricek
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/checkout")
-    public BaseResponse<CartDto> updateCard(@RequestBody CartUpdateDto cartUpdateDto){
+    public BaseResponse<CartDto> updateCard(@RequestBody CartUpdateDto cartUpdateDto, @RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
         if(cartUpdateDto.getCardNumber().length() != 16){
             return BaseResponse.fail("card number must be 16 digits", 400);
         }
-        cartUpdateDto.setCartStatus(Cart.CartStatus.COMPLETED);
-        return cartService.updateCart(cartUpdateDto);
+        return cartService.updateCart(cartUpdateDto, userId);
     }
 }

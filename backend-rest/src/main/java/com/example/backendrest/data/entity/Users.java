@@ -2,21 +2,14 @@ package com.example.backendrest.data.entity;
 
 import jakarta.persistence.*;
 
-import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(	name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long usersId;
     private String username;
 
     private String email;
@@ -24,25 +17,25 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(	name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    public User() {
+    public Users() {
     }
 
-    public User(String username, String email, String password) {
+    public Users(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUsersId() {
+        return usersId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUsersId(Long usersId) {
+        this.usersId = usersId;
     }
 
     public String getUsername() {

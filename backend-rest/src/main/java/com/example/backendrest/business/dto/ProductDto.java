@@ -14,6 +14,12 @@ public class ProductDto {
     public ProductDto() {
     }
 
+    public ProductDto(long productId, String productName, double salesPrice) {
+        ProductId = productId;
+        this.productName = productName;
+        this.salesPrice = salesPrice;
+    }
+
     public long getProductId() {
         return ProductId;
     }
