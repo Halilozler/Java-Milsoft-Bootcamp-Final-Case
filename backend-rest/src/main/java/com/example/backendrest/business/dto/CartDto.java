@@ -2,14 +2,16 @@ package com.example.backendrest.business.dto;
 
 import com.example.backendrest.data.entity.Cart;
 import com.example.backendrest.data.entity.CartProduct;
+import com.example.backendrest.data.entity.CartStatus;
+import com.example.backendrest.data.entity.Users;
 
 import java.util.List;
 
 public class CartDto {
     private long cartId;
-    private String customerName;
+    private Users users;
     private String cardNumber;
-    private Cart.CartStatus cartStatus;
+    private CartStatus cartStatus;
 
     public CartDto() {
     }
@@ -22,12 +24,12 @@ public class CartDto {
         this.cartId = cartId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Users getUser() {
+        return users;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUser(Users user) {
+        this.users = user;
     }
 
     public String getCardNumber() {
@@ -41,11 +43,11 @@ public class CartDto {
         this.cardNumber = cardNumber;
     }
 
-    public Cart.CartStatus getCartStatus() {
+    public CartStatus getCartStatus() {
         return cartStatus;
     }
 
-    public void setCartStatus(Cart.CartStatus cartStatus) {
+    public void setCartStatus(CartStatus cartStatus) {
         this.cartStatus = cartStatus;
     }
 }

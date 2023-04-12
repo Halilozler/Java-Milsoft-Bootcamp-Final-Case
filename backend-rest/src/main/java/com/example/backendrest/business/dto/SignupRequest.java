@@ -6,7 +6,6 @@ public class SignupRequest {
     private String username;
     private String email;
     private String password;
-    private Set<String> role;
 
     public String getUsername() {
         return username;
@@ -16,13 +15,6 @@ public class SignupRequest {
         this.username = username;
     }
 
-    public Set<String> getRole() {
-        return this.role;
-    }
-
-    public void setRole(Set<String> role) {
-        this.role = role;
-    }
     public String getEmail() {
         return email;
     }

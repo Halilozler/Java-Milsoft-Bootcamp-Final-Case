@@ -1,5 +1,6 @@
 package com.example.backendrest.business.service.concretes;
 
+import com.example.backendrest.base.exception.NotFoundException;
 import com.example.backendrest.base.response.BaseResponse;
 import com.example.backendrest.business.dto.CartDto;
 import com.example.backendrest.business.dto.CartProductDto;
@@ -10,39 +11,53 @@ import com.example.backendrest.business.mapper.CartUpdateMapper;
 import com.example.backendrest.business.service.abstracts.CartService;
 import com.example.backendrest.data.entity.Cart;
 import com.example.backendrest.data.entity.CartProduct;
+import com.example.backendrest.data.entity.CartStatus;
+import com.example.backendrest.data.entity.Users;
+import com.example.backendrest.data.repository.CartProductRepository;
 import com.example.backendrest.data.repository.CartRepository;
+import com.example.backendrest.data.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
+    private CartProductRepository cartProductRepository;
+    private UserRepository userRepository;
 
-    public CartServiceImpl(CartRepository cartRepository) {
+    public CartServiceImpl(CartRepository cartRepository, CartProductRepository cartProductRepository, UserRepository userRepository) {
         this.cartRepository = cartRepository;
+        this.cartProductRepository = cartProductRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public BaseResponse<CartDto> getCart(long cartId) {
-        Optional<Cart> optional = cartRepository.findById(cartId);
-        if(!optional.isPresent()){
-            Cart newCart = new Cart(RandomCustomerName(), RandomCartNumbers(), Cart.CartStatus.NEW);
-            BaseResponse<Cart> add = addCart(CartMapper.INSTANCE.cartToCartDto(newCart));
+    public BaseResponse<Cart> getCart(long userId) {
+        Cart cart = cartRepository.getCartByUserId(userId, CartStatus.NEW);
+        //Optional<Cart> optional = cartRepository.findById(cartId);
+        if(cart == null){
+            Optional<Users> userOptional = userRepository.findById(userId);
+            if(!userOptional.isPresent()){
+                return BaseResponse.fail("user not found",404);
+            }
+            Cart newCart = new Cart(RandomCartNumbers(), CartStatus.NEW);
+            newCart.setUsers(userOptional.get());
+            BaseResponse<Cart> add = addCart(CartMapper.INSTANCE.cartToCartDto(newCart), newCart.getUsers());
             if(add.isSuccessful() == false){
                 return BaseResponse.fail("card could not be added",500);
             }
-            return BaseResponse.Success(CartMapper.INSTANCE.cartToCartDto(add.getData()), 200);
+            return BaseResponse.Success(add.getData(), 200);
         }
-        return BaseResponse.Success(CartMapper.INSTANCE.cartToCartDto(optional.get()), 200);
+        return BaseResponse.Success(cart, 200);
     }
 
     @Override
-    public BaseResponse<Cart> addCart(CartDto cartDto) {
-        Cart savedCart = cartRepository.save(CartMapper.INSTANCE.cartDtotoCart(cartDto));
+    public BaseResponse<Cart> addCart(CartDto cartDto, Users users) {
+        Cart savedCart = CartMapper.INSTANCE.cartDtotoCart(cartDto);
+        //savedCart.setUsers(userRepository.findById(savedCart.getCartId()).orElseThrow(() -> new NotFoundException("user not found")));
+        savedCart.setUsers(users);
+        cartRepository.save(savedCart);
         if(savedCart.getCartId() == 0){
             return BaseResponse.fail("card could not be added",500);
         }
@@ -50,20 +65,52 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public BaseResponse<CartDto> updateCart(CartUpdateDto cartUpdateDto) {
-        Optional<Cart> optional = cartRepository.findById(cartUpdateDto.getCartId());
-        if(!optional.isPresent()){
-            return BaseResponse.fail("card not found",404);
+    public BaseResponse<CartDto> updateCart(CartUpdateDto cartUpdateDto, long userId) {
+        //Optional<Cart> optional = cartRepository.findById(cartUpdateDto.getCartId());
+        BaseResponse<Cart> cartDto = getCart(userId);
+        if(cartDto.isSuccessful() == false){
+            return BaseResponse.fail("An error occurred while receiving the cart",500);
         }
-        Cart cart = optional.get();
-        cart.setCartStatus(cartUpdateDto.getCartStatus());
+        /*update edilecek cart usera mı ait
+        Cart cart = cartDto.getData();
+        if(cart.getUsers().getUsersId() != userId){
+            return BaseResponse.fail("unauthorized access",401);
+        }
+         */
+        Cart cart = cartRepository.findById(cartDto.getData().getCartId()).get();
         cart.setCardNumber(cartUpdateDto.getCardNumber());
-        cart.setCustomerName(cartUpdateDto.getCustomerName());
         Cart savedCart = cartRepository.save(cart);
         if(savedCart.getCartId() == 0){
-            return BaseResponse.fail("card could not be update",500);
+            return BaseResponse.fail("cart could not be update",500);
         }
         return BaseResponse.Success(CartMapper.INSTANCE.cartToCartDto(savedCart), 200);
+    }
+
+    //cartı complete çeker ve tarih yazar.
+    @Override
+    public BaseResponse<Boolean> setCartCompleted(long userId) {
+        //Cart cart2 = cartRepository.findById(cartId).orElseThrow(() -> new NotFoundException("cart not found"));
+        Cart cart = cartRepository.getCartByUserId(userId, CartStatus.NEW);
+        if(cart == null){
+            return BaseResponse.fail("You don't have a cart",404);
+        }
+        /*
+        if(cart.getUsers().getUsersId() != userId){
+            return BaseResponse.fail("unauthorized access",401);
+        }
+        */
+        //cartın içinde product varmı bakar yoksa izin vermez.
+        List<CartProduct> cartProduct = cartProductRepository.getCartProduct(cart.getCartId(), CartStatus.NEW);
+        if(cartProduct.size() < 1){
+            return BaseResponse.fail("There are no products in the cart", 500);
+        }
+        cart.setCartStatus(CartStatus.COMPLETED);
+        cart.setCreatedDate(Calendar.getInstance().getTime());
+        Cart savedCart = cartRepository.save(cart);
+        if(savedCart.getCartId() == 0){
+            return BaseResponse.fail("cart could not be update",500);
+        }
+        return BaseResponse.Success(true, 200);
     }
 
     private String RandomCartNumbers(){

@@ -5,6 +5,15 @@ public class CartProductGetDto {
     private ProductDto product;
     private int salesQuantity;
 
+    public CartProductGetDto() {
+    }
+
+    public CartProductGetDto(long cartProductId, ProductDto product, int salesQuantity) {
+        this.cartProductId = cartProductId;
+        this.product = product;
+        this.salesQuantity = salesQuantity;
+    }
+
     public long getCartProductId() {
         return cartProductId;
     }
