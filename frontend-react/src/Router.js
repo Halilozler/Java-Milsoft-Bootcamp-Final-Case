@@ -10,6 +10,7 @@ import IndexMainScreen from './components/MainScreen/Index';
 import CartCheckout from './components/Shopping/CartCheckout';
 import CartDetail from './components/Shopping/CartDetail';
 import CartSummary from './components/Shopping/CartSummary';
+import UserOperations from "./components/UserOperations/Index";
 
 const Router = () => {
     return (
@@ -23,6 +24,7 @@ const Router = () => {
                     <Route path="/cartcheckout" element={<CartCheckout/>} />
                     <Route path="/cartdetail" element={<CartDetail/>} />
                     <Route path="/cartsummary" element={<CartSummary/>} />
+                    <Route path="/user" element={<UserOperations/>} />
                 </Route>
                 <Route path="*" element={<NotFound/>} />
             </Routes>

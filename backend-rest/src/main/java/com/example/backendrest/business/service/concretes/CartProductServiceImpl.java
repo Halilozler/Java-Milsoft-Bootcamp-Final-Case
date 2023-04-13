@@ -104,7 +104,9 @@ public class CartProductServiceImpl implements CartProductService {
         CartProductCompleteDto response = new CartProductCompleteDto();
         List<CartProduct> cartProductList = cartProductRepository.getCartProductByCartId(cartId);
         if(!cartProductList.isEmpty()){
-            response.setCartDto(CartMapper.INSTANCE.cartToCartDto(cartProductList.get(0).getCart()));
+            //response.setCartDto(CartMapper.INSTANCE.cartToCartDto(cartProductList.get(0).getCart()));
+            response.setCardNumber(cartProductList.get(0).getCart().getCardNumber());
+            response.setCreatedDate(cartProductList.get(0).getCart().getCreatedDate());
             List<CartProductGetDto> cartProductGetDtoList = new ArrayList<>();
             for(CartProduct cartProduct : cartProductList){
                 cartProductGetDtoList.add(new CartProductGetDto(cartProduct.getCartProductId(), new ProductDto(cartProduct.getProduct().getProductId(), cartProduct.getProduct().getProductName(), cartProduct.getProduct().getSalesPrice()), cartProduct.getSalesQuantity()));

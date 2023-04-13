@@ -1,0 +1,25 @@
+.main_user{
+    box-shadow: 0px 0px 61px 12px rgba(0,0,0,0.1);
+    .left_user{
+        width: 50%;
+        height: 500px;
+        position: relative;
+        padding-left: 2rem;
+        padding-top: 0.2rem;
+        &::after{
+            content: '';
+            display: block;
+            border-right: 1px solid grey;
+            height: 90%;
+            background-color: #e5e6ec;
+            position: absolute;
+            right: 0;
+            top: 5%;
+            bottom: 5%;
+        }
+    }
+    .right_user{
+        padding-left: 2rem;
+        padding-top: 0.2rem;
+    }
+}

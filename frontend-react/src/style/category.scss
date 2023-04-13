@@ -1,7 +1,10 @@
+@import "./color.scss";
+
 .category-product-list{
     display: flex;
     justify-content: center;
     width: 100%;
+    background-color: $category_navbar;
 }
 .category_card{
     // padding: 0 0.1rem 0 0.1rem;
@@ -13,21 +16,51 @@
         margin-bottom: 0rem;
         width: 100%;
         font-size: medium;
-        background-color: rgba(54, 148, 240, 255);
+        //background-color: rgba(54, 148, 240, 255);
+        background-color: $category_navbar;
+        font-weight: bold;
         border: 0;
         color: #fff;
+        transition: color 0.3s;
+        position: relative;
+        display: inline-block;
         &:hover{
-            background-color: rgba(54, 129, 240, 255);
+            //background-color: rgba(54, 129, 240, 255);
             cursor: pointer;
+            color: $orange_button;
+            
+            &::after {
+                width: 100%;
+            }
         }
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            width: 0;
+            height: 5px;
+            background-color: $orange_button;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        &.selected {
+            color: $orange_button;
+            &::after {
+              width: 100%;
+            }
+          }
     }
     &:not(:first-child){
         // padding-left: 1rem;
     }
     &:not(:last-child){
-        border-right: 1.5px;
-        border-right-style: solid;
-        border-right-color: #fff;
+        padding-right: 1rem;
     }
+    // &:not(:last-child){
+    //     border-right: 1.5px;
+    //     border-right-style: solid;
+    //     border-right-color: #fff;
+    // }
 }
 

@@ -18,6 +18,7 @@ import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
 import { incrementBasketCount } from './store/mainstore';
 import { useNavigate } from 'react-router-dom';
+import PersonIcon from '@mui/icons-material/Person';
 
 
 const pages = [];
@@ -55,11 +56,18 @@ const Navbar = () => {
     navigate("/cartdetail");
   };
 
+  const clickUserBtn = () => {
+    navigate("/user");
+  };
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{backgroundColor: "#1b2c3d"}}>
+      {/* <div style={{display: "flex", width: "100vw", justifyContent:"center", paddingTop: "0.5rem"}}>
+        <p style={{margin: 0, fontWeight: "bolder", color: "#40d6b9"}}>100₺ Üzeri Alışverişlerde Kargo Bedava!</p> 
+      </div> */}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -69,8 +77,8 @@ const Navbar = () => {
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
+              fontWeight: 800,
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -79,7 +87,7 @@ const Navbar = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -88,7 +96,7 @@ const Navbar = () => {
               color="inherit"
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -114,7 +122,7 @@ const Navbar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -126,12 +134,12 @@ const Navbar = () => {
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            LOGO
+            MilSOFTBurada
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -146,29 +154,25 @@ const Navbar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-          <IconButton aria-label="cart" onClick={clickCartBtn}>
-            <StyledBadge badgeContent={basketCount} color="secondary">
-              <ShoppingCartIcon />
-            </StyledBadge>
-          </IconButton>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              
-            </Menu>
+            {/* <div style={{display: "flex", flexDirection: "row", alignItems:"center"}}>
+              <p style={{margin: 0, fontWeight: "bold", fontSize: "1.2rem"}}>Giriş Yap / Üye Ol</p>
+              <PersonIcon style={{fontSize: "30"}}/>
+            </div> */}
+            <Button variant="text" style={{color: "white", textTransform: "none", height: "3rem"}} onClick={clickUserBtn}>
+              <p style={{margin: 0, fontWeight: "bold", fontSize: "1.1rem"}}>Giriş Yap/Üye Ol</p>
+              <PersonIcon style={{fontSize: "30"}}/>
+            </Button>
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>
+          <Button variant="text" style={{color: "white", textTransform: "none", height: "3rem"}}>
+            <IconButton aria-label="cart" onClick={clickCartBtn}>
+              <StyledBadge badgeContent={basketCount} color="secondary" style={{color: "white", display: "flex", alignItems:"center"}}>
+                <p style={{margin: 0, fontWeight: "bold", fontSize: "1.2rem"}}>Sepet</p>
+                <ShoppingCartIcon style={{fontSize: "25"}}/>
+              </StyledBadge>
+            </IconButton>
+            </Button>
           </Box>
         </Toolbar>
       </Container>
