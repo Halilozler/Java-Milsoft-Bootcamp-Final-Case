@@ -59,6 +59,7 @@ export const getProfileInformation = async () => {
     return response.data;
 }
 
+//sepete ekleme
 export const addBasket = async (productId) => {
   let token = localStorage.getItem("token");
   if(token === null){
@@ -71,6 +72,44 @@ export const addBasket = async (productId) => {
   }
 
   const response = await axios.post(cartApi + `add/${productId}`, null, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+//Sepet Getirme
+export const getCart = async () => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.get(cartApi + "get/new", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+//Geçmiş Sepetler Getirme
+export const getCartSummary = async () => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.get(cartApi + "get/completed", {
     headers: {
       Authorization: "Bearer " + token
     }

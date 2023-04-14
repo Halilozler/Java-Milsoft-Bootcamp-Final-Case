@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector} from "react-redux";
 import { setCartId, incrementBasketCount} from '../../../store/mainstore';
 import { useNavigate } from 'react-router-dom';
+import { addBasket } from '../../../utils/ApiCommand';
 
 const ProductComponent = () => {
   const { cartId } = useSelector(state => state.mainStore);
@@ -28,7 +29,22 @@ const ProductComponent = () => {
   }, [productId]);
 
   const changeHandler = () => {
-    
+    if(localStorage.getItem("token") === null && sessionStorage.getItem("token") === null){
+      alert("Lütfen giriş yapınız.");
+    }
+    else{
+      addBasket(productId).then((res) => {
+        console.log(res);
+        if(res.successful === false){
+          alert("Ürün sepete eklenemedi. Lütfen daha sonra tekrar deneyiniz.");
+          return;
+        }
+        dispatch(incrementBasketCount());
+        alert("Ürün sepete eklendi.");
+      }).catch((err) => {
+        console.log(err.response.data.message);
+      });
+    }
   }
 
   return (

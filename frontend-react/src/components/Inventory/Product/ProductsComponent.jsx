@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProductsByCategoryId } from '../../../utils/ApiCommand';
 import ProductCard from './ProductCard';
-import HeaderHelper from '../../Helper/HeaderHelper';
 
 const ProductsComponent = () => {
     const [products, setProducts] = useState([]);

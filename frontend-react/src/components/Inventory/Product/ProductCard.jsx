@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { incrementBasketCount } from '../../../store/mainstore';
 
 
+
 const ProductCard = ({imageUrl, productName, productId, salesPrice}) => {
     const dispatch = useDispatch();
     let navigate  = useNavigate();
