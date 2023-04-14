@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .requestMatchers("/api/cart/**").authenticated()
+                .requestMatchers("/api/auth/username").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/category/**").permitAll()
                 .requestMatchers("/api/product/**").permitAll()

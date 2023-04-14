@@ -13,9 +13,11 @@ import java.util.List;
 
 @Repository
 public interface CartRepository extends CrudRepository<Cart, Long> {
+    //completeleri getirmek için
     @Query("select c from Cart c where c.users.usersId = :userId and c.cartStatus = :statusCode")
     public List<Cart> getListCartByUserId(@Param("userId") long userId, @Param("statusCode") CartStatus cartStatus);
 
+    //new getirmek için
     @Query("select c from Cart c where c.users.usersId = :userId and c.cartStatus = :statusCode")
     public Cart getCartByUserId(@Param("userId") long userId, @Param("statusCode") CartStatus cartStatus);
 }

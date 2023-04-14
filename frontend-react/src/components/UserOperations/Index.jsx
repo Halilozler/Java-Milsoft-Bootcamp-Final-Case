@@ -2,45 +2,160 @@ import React, {useState, useEffect} from 'react'
 import Button from '@mui/material/Button';
 import InputTools from '../Tools/InputTools'
 import CheckBoxTool1 from '../Tools/CheckBoxTool1';
-
+import { login, signup } from '../../utils/ApiCommand';
+import { setLogin } from '../../store/mainstore';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 const Index = () => {
-  return (
-    <div style={{width: "100%", display: "flex", justifyContent: "center", paddingTop: "1rem"}}>
-        <div className='main_user' style={{display: "flex", width: "720px"}}>
-            <div className='left_user'>
-                <h3>Giriş Yap</h3>
-                <div style={{}}>
-                    <InputTools title={"Kullanıcı Adı"} type={"text"} width={285}/>
-                </div>
-                <div style={{paddingTop: "1rem"}}>
-                    <InputTools title={"Şifre"} type={"password"} width={285}/>
-                </div>
-                <div style={{paddingTop: "1rem"}}>
-                    <CheckBoxTool1 text={"Beni Hatırla"}/>
-                </div>
-                <div style={{paddingTop: "1rem"}}>
-                    <Button variant="contained" style={{backgroundColor: "#f49b21"}}>Giriş Yap</Button>
-                </div>
-            </div>
-            <div className='right_user'>
-                <h3>Üye Ol</h3>
-                <div style={{}}>
-                    <InputTools title={"Kullanıcı Adı"} type={"text"} width={285}/>
-                </div>
-                <div style={{paddingTop: "1rem"}}>
-                    <InputTools title={"E-mail"} type={"email"} width={285}/>
-                </div>
-                <div style={{paddingTop: "1rem"}}>
-                    <InputTools title={"Şifre"} type={"password"} width={285}/>
-                </div>
-                <p style={{width: 290, margin: 0, marginTop: "1rem"}}>Kişisel verileriniz, <b style={{color: "blue"}}>Aydınlatma Metni</b>  kapsamında işlenmektedir. “Üye ol” butonuna basarak Üyelik Sözleşmesi’ni <b style={{color: "blue"}}> Rıza Metni'ni-Çerez Politikası'nı</b> okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz</p>
-                <div style={{paddingTop: "1rem"}}>
-                    <Button variant="contained" style={{backgroundColor: "#f49b21"}}>Üye Ol </Button>
-                </div>
-            </div>
-        </div>
-    </div>
-  )
-}
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigator = useNavigate();
+  const dispatch = useDispatch();
 
-export default Index
+  const handleSubmitLogin = (e) => {
+    e.preventDefault();
+    // Giriş işlemleri
+    login(username, password).then((res) => {
+      if(res.successful === false){
+        alert(res.errors);
+        return;
+      }
+      if(rememberMe) {
+        localStorage.setItem("token", res.data.accessToken);
+      } else {
+        sessionStorage.setItem("token", res.data.accessToken);
+      }
+      alert("Giriş işlemi başarılı.");
+      dispatch(setLogin());
+      navigator("/");
+    }).catch((err) => {
+      console.log(err.response.data);
+    });
+  };
+
+  const handleSubmitRegister = (e) => {
+    e.preventDefault();
+    // Kayıt işlemleri
+    signup(username, email, password).then((res) => {
+      //tekrar giriş yapılması istenir.
+      alert("Kayıt işlemi başarılı. Giriş yapılıyor.");
+      login(username, password).then((res) => {
+        if(res.successful === false){
+          alert(res.errors);
+          return;
+        }
+        if(rememberMe) {
+          localStorage.setItem("token", res.data.accessToken);
+        } else {
+          sessionStorage.setItem("token", res.data.accessToken);
+        }
+        alert("Giriş işlemi başarılı.");
+        dispatch(setLogin());
+        navigator("/");
+      });
+    }).catch((err) => {
+      console.log(err.response.data.message);
+    });
+  };
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "1rem",
+      }}
+    >
+      <div className="main_user" style={{ display: "flex", width: "720px" }}>
+        <div className="left_user">
+          <h3>Giriş Yap</h3>
+          <form onSubmit={handleSubmitLogin}>
+            <InputTools
+              title={"Kullanıcı Adı"}
+              type={"text"}
+              width={285}
+              state={username}
+              setState={setUsername}
+              minLength={3}
+            />
+            <InputTools
+              title={"Şifre"}
+              type={"password"}
+              width={285}
+              state={password}
+              setState={setPassword}
+              minLength={3}
+            />
+            <CheckBoxTool1 text={"Beni Hatırla"} setState={setRememberMe}/>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#f49b21", marginTop: "0.5rem" }}
+              type="submit"
+            >
+              Giriş Yap
+            </Button>
+          </form>
+        </div>
+        <div className="right_user">
+          <h3>Üye Ol</h3>
+          <form onSubmit={handleSubmitRegister}>
+            <InputTools
+              title={"Kullanıcı Adı"}
+              type={"text"}
+              width={285}
+              state={username}
+              setState={setUsername}
+              minLength={3}
+            />
+            <InputTools
+              title={"E-mail"}
+              type={"email"}
+              width={285}
+              state={email}
+              setState={setEmail}
+            />
+            <InputTools
+              title={"Şifre"}
+              type={"password"}
+              width={285}
+              state={password}
+              setState={setPassword}
+              minLength={3}
+            />
+            <p
+              style={{
+                width: 290,
+                margin: 0,
+                marginTop: "1rem",
+              }}
+            >
+              Kişisel verileriniz,{" "}
+              <b style={{ color: "blue", cursor: "pointer" }}>
+                Aydınlatma Metni
+              </b>{" "}
+              kapsamında işlenmektedir. “Üye ol” butonuna basarak Üyelik
+              Sözleşmesi’ni{" "}
+              <b style={{ color: "blue", cursor: "pointer" }}>
+                {" "}
+                Rıza Metni'ni-Çerez Politikası'nı
+              </b>{" "}
+              okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz
+            </p>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#f49b21", marginTop: "0.5rem"  }}
+              type="submit"
+              >
+                Üye Ol
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  export default Index;

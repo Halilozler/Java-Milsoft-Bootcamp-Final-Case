@@ -41,17 +41,18 @@ const ProductComponent = () => {
         alt="green iguana"
         height="500"
         image={imageUrl}
+        style={{width: 450}}
       />
       <div>
-      <CardContent>
+      <CardContent style={{minWidth: 250, paddingBottom: 0}}>
         <Typography gutterBottom variant="h5" component="div">
-          {product.productName}
+          <b>{product.productName}</b> 
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {product.salesPrice}
+          {product.salesPrice} ₺
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions style={{ paddingLeft: "1rem" }}>
       <Button variant="contained" onClick={changeHandler}>Sepete Ekle</Button>
       </CardActions>
       </div>

@@ -1,11 +1,10 @@
 package com.example.backendrest.presentation.rest;
 
 import com.example.backendrest.base.Util.JwtUtils;
+import com.example.backendrest.base.exception.NotFoundException;
 import com.example.backendrest.base.response.BaseResponse;
-import com.example.backendrest.business.dto.JwtResponse;
-import com.example.backendrest.business.dto.LoginRequest;
-import com.example.backendrest.business.dto.MessageResponse;
-import com.example.backendrest.business.dto.SignupRequest;
+import com.example.backendrest.business.dto.*;
+import com.example.backendrest.business.service.abstracts.AuthService;
 import com.example.backendrest.business.service.concretes.UserDetailsImpl;
 import com.example.backendrest.data.entity.ERole;
 import com.example.backendrest.data.entity.Role;
@@ -15,15 +14,13 @@ import com.example.backendrest.data.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +41,24 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    AuthService authService;
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/profile")
+    public BaseResponse<UserDto> getUserNameAndEmail(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        Users user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
+        BaseResponse<Integer> basketSize = authService.GetBasketCount(userId);
+        if(basketSize.isSuccessful() == false){
+            return BaseResponse.fail(basketSize.getErrors(), 500);
+        }
+        return BaseResponse.Success(new UserDto(user.getUsername(), user.getEmail(), basketSize.getData()), 200);
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

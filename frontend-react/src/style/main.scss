@@ -1,4 +1,11 @@
+@import "./color.scss";
 //css:
+.main_background{
+  background-size: 100% 100%; 
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
 .appScreen{
     width: 100vw;
     height: 100vh;
@@ -29,10 +36,13 @@
         height: 89vh;
       }
       .copyScreen{
-        background-color: rgb(245, 245, 245);
+        background-color: $main_navbar;
+        color: white;
         width: 100vw;
         display: flex;
         justify-content: center;
+        position: absolute;
+        bottom: 0;
       }
     }
 

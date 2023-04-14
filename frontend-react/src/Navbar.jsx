@@ -33,7 +33,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { basketCount } = useSelector(state => state.mainStore);
+  const { basketCount, isAuthenticated } = useSelector(state => state.mainStore);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -57,7 +57,12 @@ const Navbar = () => {
   };
 
   const clickUserBtn = () => {
-    navigate("/user");
+    if(isAuthenticated){
+      navigate("/profile");
+    }else{
+      navigate("/user");
+    }
+    
   };
 
   return (
@@ -159,7 +164,7 @@ const Navbar = () => {
               <PersonIcon style={{fontSize: "30"}}/>
             </div> */}
             <Button variant="text" style={{color: "white", textTransform: "none", height: "3rem"}} onClick={clickUserBtn}>
-              <p style={{margin: 0, fontWeight: "bold", fontSize: "1.1rem"}}>Giriş Yap/Üye Ol</p>
+              {isAuthenticated ? <p style={{margin: 0, fontWeight: "bold", fontSize: "1.1rem"}}>Profil Bilgileri</p> : <p style={{margin: 0, fontWeight: "bold", fontSize: "1.1rem"}}>Giriş Yap/Üye Ol</p>} 
               <PersonIcon style={{fontSize: "30"}}/>
             </Button>
           </Box>

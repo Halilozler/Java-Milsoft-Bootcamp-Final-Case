@@ -18,9 +18,11 @@ const ProductsComponent = () => {
         <div className="product-list">
         {products.length === 0 ? <div style={{color: "white"}}>No products found</div>
         :
-          products.map((product, index) => (
-            <ProductCard key={product.categoryId} imageUrl={"/image.jpeg"} productName={product.productName} salesPrice={product.salesPrice} productId={product.productId}/>
-          ))
+        <>
+          {products.map((product, index) => (
+              <ProductCard key={product.categoryId} imageUrl={"/image.jpeg"} productName={product.productName} salesPrice={product.salesPrice} productId={product.productId}/>
+            ))}
+        </>
         }
       </div>
     </>

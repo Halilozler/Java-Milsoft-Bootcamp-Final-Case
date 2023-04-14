@@ -1,5 +1,6 @@
 package com.example.backendrest.base.config;
 
+import com.example.backendrest.base.response.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
         LOGGER.error("Exception occurred: {}", ex.getMessage(), ex);
 
         // Hata yanıtını döndür
-        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(BaseResponse.fail(ex.getMessage(), 500), HttpStatus.INTERNAL_SERVER_ERROR);
+        //return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

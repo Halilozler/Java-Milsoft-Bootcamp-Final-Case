@@ -26,6 +26,8 @@ public interface CartProductRepository extends CrudRepository<CartProduct, Long>
 
     @Query("select cp from CartProduct cp where cp.cart.cartId = :cartId")
     public List<CartProduct> getCartProductByCartId(@Param("cartId") long cartId);
+    @Query("select count(cp) from CartProduct cp where cp.cart.cartId= :cartId")
+    public int getCartProductSizeByCartId(@Param("cartId") long cartId);
 
     /*
     @Query("select cp from CartProduct cp where cp.cart.userId = :userId and cp.cart.cartStatus = Cart.CartStatus.COMPLETED order by cp.cart.createdDate desc")

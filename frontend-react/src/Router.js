@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from './App';
 //page imports
@@ -11,8 +11,12 @@ import CartCheckout from './components/Shopping/CartCheckout';
 import CartDetail from './components/Shopping/CartDetail';
 import CartSummary from './components/Shopping/CartSummary';
 import UserOperations from "./components/UserOperations/Index";
+import Profile from './components/UserOperations/Profile';
 
 const Router = () => {
+    useEffect(() => {
+        
+    }, []);
     return (
         <BrowserRouter>
             <Routes>
@@ -25,6 +29,7 @@ const Router = () => {
                     <Route path="/cartdetail" element={<CartDetail/>} />
                     <Route path="/cartsummary" element={<CartSummary/>} />
                     <Route path="/user" element={<UserOperations/>} />
+                    <Route path="/profile" element={<Profile/>} />
                 </Route>
                 <Route path="*" element={<NotFound/>} />
             </Routes>

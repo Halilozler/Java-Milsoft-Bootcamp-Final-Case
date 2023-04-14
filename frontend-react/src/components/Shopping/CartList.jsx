@@ -1,10 +1,27 @@
-
 import React, { useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
-import { DataView } from 'primereact/dataview';
-import { Rating } from 'primereact/rating';
-import { Tag } from 'primereact/tag';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Button } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
+function createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
+  }
+  
+  const rows = [
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
+  ];
+
+//sepetimiza eklediğimiz ürünleri göstermek için kullanılan component
 export default function CartList() {
     const [products, setProducts] = useState([]);
 
@@ -12,52 +29,39 @@ export default function CartList() {
         //ProductService.getProductsSmall().then((data) => setProducts(data.slice(0, 5)));
     }, []);
 
-    const getSeverity = (product) => {
-        switch (product.inventoryStatus) {
-            case 'INSTOCK':
-                return 'success';
-
-            case 'LOWSTOCK':
-                return 'warning';
-
-            case 'OUTOFSTOCK':
-                return 'danger';
-
-            default:
-                return null;
-        }
-    };
-
-    const itemTemplate = (product) => {
-        return (
-            <div className="col-25">
-                <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-                    <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={"/image.jpeg"} />
-                    <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                        <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-                            <div className="text-2xl font-bold text-900">{"product.name"}</div>
-                            {/* <div className="flex align-items-center gap-3">
-                                <span className="flex align-items-center gap-2">
-                                    <i className="pi pi-tag"></i>
-                                    <span className="font-semibold">{product.category}</span>
-                                </span>
-                                <Tag value={product.inventoryStatus} severity={getSeverity(product)}></Tag>
-                            </div> */}
-                        </div>
-                        <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <span className="text-2xl font-semibold">${"product.price"}</span>
-                            <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={product.inventoryStatus === 'OUTOFSTOCK'}></Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
     return (
-        <div className="card">
-            <DataView value={[products]} itemTemplate={itemTemplate} />
-        </div>
+        <>
+        <TableContainer component={Paper} style={{backgroundColor: "#f5f5f5", boxShadow: "none"}}>
+        <Table sx={{ minWidth: 150 }} aria-label="simple table" style={{borderCollapse: "collapse"}}>
+            <TableHead>
+                <TableRow> 
+                    <TableCell style={{borderBottomWidth: 3, paddingBottom: 0, fontWeight:"bold"}}>ÜRÜN</TableCell>
+                    <TableCell align="right" style={{borderBottomWidth: 3, paddingBottom: 0, fontWeight:"bold"}}>FİYAT</TableCell>
+                    <TableCell align="right" style={{borderBottomWidth: 3, paddingBottom: 0, fontWeight:"bold"}}>MİKTAR</TableCell>
+                    <TableCell align="right" style={{borderBottomWidth: 3, paddingBottom: 0, fontWeight:"bold"}}>TOPLAM</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+            {rows.map((row) => (
+                <TableRow
+                key={row.name}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                <TableCell component="th" scope="row">
+                    {row.name}
+                </TableCell>
+                <TableCell align="right">{row.calories}</TableCell>
+                <TableCell align="right">{row.fat}</TableCell>
+                <TableCell align="right"><b>{row.carbs} ₺</b></TableCell>
+                </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+    <Button variant="outlined" style={{color: "red", borderColor: "red"}} startIcon={<DeleteIcon />}>
+        Sepeti Boşalt
+    </Button>
+    </>
     )
 }
         

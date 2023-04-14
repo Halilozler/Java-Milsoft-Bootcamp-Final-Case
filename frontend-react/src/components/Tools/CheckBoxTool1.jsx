@@ -1,10 +1,13 @@
 import React from 'react'
 
-const CheckBoxTool1 = ({text}) => {
+const CheckBoxTool1 = ({style, text, setState}) => {
+    const handleCheckboxChange = (event) => {
+        setState(event.target.checked);
+      };
   return (
-    <div class="checkbox-wrapper-12">
+    <div class="checkbox-wrapper-12" style={style}>
         <div class="cbx">
-            <input id="cbx-12" type="checkbox"/>
+            <input id="cbx-12" type="checkbox" onChange={handleCheckboxChange}/>
             <label for="cbx-12"></label>
             <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
             <path d="M2 8.36364L6.23077 12L13 2"></path>
