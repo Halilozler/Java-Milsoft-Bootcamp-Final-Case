@@ -8,6 +8,7 @@ import { Button, CardActionArea } from '@mui/material';
 import { addBasket } from '../../../utils/ApiCommand';
 import { useDispatch } from 'react-redux';
 import { incrementBasketCount } from '../../../store/mainstore';
+import Notification from '../../../utils/Notification';
 
 
 
@@ -20,17 +21,17 @@ const ProductCard = ({imageUrl, productName, productId, salesPrice}) => {
     const basketAddButton = (e) => {
       e.stopPropagation();
       if(localStorage.getItem("token") === null && sessionStorage.getItem("token") === null){
-        alert("Lütfen giriş yapınız.");
+        Notification(2, "Lütfen giriş yapınız.");
       }
       else{
         addBasket(productId).then((res) => {
           console.log(res);
           if(res.successful === false){
-            alert("Ürün sepete eklenemedi. Lütfen daha sonra tekrar deneyiniz.");
+            Notification(0, "Ürün sepete eklenemedi. Lütfen daha sonra tekrar deneyiniz.");
             return;
           }
           dispatch(incrementBasketCount());
-          alert("Ürün sepete eklendi.");
+          Notification(1, "Ürün sepete eklendi.");
         }).catch((err) => {
           console.log(err.response.data.message);
         });

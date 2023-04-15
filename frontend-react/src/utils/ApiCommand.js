@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Notification from './Notification';
 
 const baseUrl = "http://localhost:8080/api/";
 const categoryApi = baseUrl + "category/";
@@ -60,18 +61,36 @@ export const getProfileInformation = async () => {
 }
 
 //sepete ekleme
-export const addBasket = async (productId) => {
+export const addBasket = async (productId, salesQuantity) => {
   let token = localStorage.getItem("token");
   if(token === null){
     token = sessionStorage.getItem("token");
   }
   if(token === null){
     //burada hata döndürülebilir
-    alert("Lütfen giriş yapınız");
+    Notification(0, "Lütfen giriş yapınız");
     return null;
   }
 
-  const response = await axios.post(cartApi + `add/${productId}`, null, {
+  const response = await axios.post(cartApi + `add/${productId}/${salesQuantity == undefined ? 1 : salesQuantity}`, null, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+export const getCartInformation = async () => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.get(cartApi + "get", {
     headers: {
       Authorization: "Bearer " + token
     }
@@ -110,6 +129,77 @@ export const getCartSummary = async () => {
   }
 
   const response = await axios.get(cartApi + "get/completed", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+export const deleteCart = async () => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.delete(cartApi + "remove/all", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+export const decrimentCart = async (productId) => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.delete(cartApi + `remove/quantity/${productId}`, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+export const deleteCartProduct = async (productId) => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.delete(cartApi + `remove/${productId}`, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+  return response.data;
+}
+
+export const completeCart = async (cardNumber) => {
+  let token = localStorage.getItem("token");
+  if(token === null){
+    token = sessionStorage.getItem("token");
+  }
+  if(token === null){
+    //burada hata döndürülebilir
+    return null;
+  }
+
+  const response = await axios.put(cartApi + `checkout`, {cardNumber},{
     headers: {
       Authorization: "Bearer " + token
     }

@@ -6,6 +6,17 @@
   background-position: center center;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
 .appScreen{
     width: 100vw;
     height: 100vh;
@@ -45,5 +56,43 @@
         bottom: 0;
       }
     }
+}
 
+.btn_decriment{
+  width: 30px;
+  height: 25px;
+  margin-right: 5px;
+  border-width: 0;
+  background-color: $orange_button;
+  color: $dark_white;
+  border-top-left-radius: 30%;
+  border-bottom-left-radius: 30%;
+  font-size: 20px;
+  padding: 0;
+  &:hover{
+    cursor: pointer;
+    background-color: darken($orange_button, 10%);
+  }
+  &:active{
+    background-color: darken($orange_button, 20%);
+  }
+}
+.btn_incriment{
+  width: 30px;
+  height: 25px;
+  margin-left: 5px;
+  border-width: 0;
+  background-color: $orange_button;
+  color: $dark_white;
+  border-top-right-radius: 30%;
+  border-bottom-right-radius: 30%;
+  font-size: 20px;
+  padding: 0;
+  &:hover{
+    cursor: pointer;
+    background-color: darken($orange_button, 10%);
+  }
+  &:active{
+    background-color: darken($orange_button, 20%);
+  }
 }

@@ -80,14 +80,17 @@ public class CartController {
     //**
     //carta ürün ekler.
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/add/{productId}")
-    public BaseResponse<CartProductDto> addCart(@PathVariable("productId") long productId, @RequestHeader(value = "Authorization", required = true) String bearerToken){
+    @PostMapping("/add/{productId}/{salesQuantity}")
+    public BaseResponse<CartProductDto> addCart(@PathVariable("productId") long productId, @PathVariable("salesQuantity") int salesQuantity, @RequestHeader(value = "Authorization", required = true) String bearerToken){
         String token = bearerToken.substring(7);
         Long userId = jwtUtils.getUserIdFromJwtToken(token);
         if(userId == 0){
             BaseResponse.fail("user not found", 500);
         }
-        return cartproductService.addCartProduct(productId, userId);
+        if(salesQuantity < 1){
+            salesQuantity = 1;
+        }
+        return cartproductService.addCartProduct(productId, userId, salesQuantity);
     }
     //**
     //cartan new ürün silmek isterse.
@@ -100,6 +103,28 @@ public class CartController {
             BaseResponse.fail("user not found", 500);
         }
         return cartproductService.removeCartProduct(productId, userId);
+    }
+    //Bütün cartı silme
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/remove/all")
+    public BaseResponse<Boolean> removeAllCartProduct(@RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.removeAllCartProduct(userId);
+    }
+    //salesquantity 1 azaltma
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/remove/quantity/{productId}")
+    public BaseResponse<Boolean> removeQuantityCartProduct(@PathVariable("productId") long productId, @RequestHeader(value = "Authorization", required = true) String bearerToken){
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtils.getUserIdFromJwtToken(token);
+        if(userId == 0){
+            BaseResponse.fail("user not found", 500);
+        }
+        return cartproductService.removeCartQuantityProduct(productId, userId);
     }
     //**
     //cart bilgileri değiştiricek

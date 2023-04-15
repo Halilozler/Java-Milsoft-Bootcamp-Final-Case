@@ -60,22 +60,55 @@ public class CartProductServiceImpl implements CartProductService {
     }
 
     @Override
-    public BaseResponse<CartProductDto> addCartProduct(long productId, long userId) {
+    public BaseResponse<Boolean> removeAllCartProduct(long userId) {
+        BaseResponse<Cart> cart = cartService.getCart(userId);
+        if(cart.isSuccessful() == false){
+            return BaseResponse.fail(cart.getErrors(),500);
+        }
+        cartProductRepository.allDelete(cart.getData().getCartId());
+        return BaseResponse.Success(true, 204);
+    }
+
+    @Override
+    public BaseResponse<Boolean> removeCartQuantityProduct(long productId, long userId) {
+        BaseResponse<Cart> cart = cartService.getCart(userId);
+        if(cart.isSuccessful() == false){
+            return BaseResponse.fail(cart.getErrors(),500);
+        }
+        CartProduct cartProduct = cartProductRepository.findCartProduct(cart.getData().getCartId(), productId);
+        if(cartProduct == null){
+            return BaseResponse.fail("object not found", 404);
+        }
+
+        if(cartProduct.getSalesQuantity() <= 1){
+            //tamamen sil
+            cartProductRepository.writeDelete(cartProduct.getCartProductId());
+            return BaseResponse.Success(true, 201);
+        }
+
+        cartProduct.setSalesQuantity(cartProduct.getSalesQuantity() - 1);
+        cartProductRepository.save(cartProduct);
+
+        return BaseResponse.Success(true, 200);
+    }
+
+    @Override
+    public BaseResponse<CartProductDto> addCartProduct(long productId, long userId, int salesQuantity) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         //Optional<Cart> cart = cartRepository.findById(cartId);
         BaseResponse<Cart> cartDto = cartService.getCart(userId);
         if(cartDto.isSuccessful() == false){
-            return BaseResponse.fail("An error occurred while receiving the cart",500);
+            return BaseResponse.fail(cartDto.getErrors(),500);
         }
 
         CartProduct cartProduct = cartProductRepository.findCartProduct(cartDto.getData().getCartId(), productId);
         if(cartProduct != null){
-            cartProduct.setSalesQuantity(cartProduct.getSalesQuantity() + 1);
+            cartProduct.setSalesQuantity(cartProduct.getSalesQuantity() + salesQuantity);
         }else{
             cartProduct = new CartProduct();
             cartProduct.setCart(cartDto.getData());
             cartProduct.setProduct(product);
-            cartProduct.setSalesQuantity(1);
+            cartProduct.setSalesQuantity(salesQuantity);
         }
 
         cartProduct = cartProductRepository.save(cartProduct);
@@ -123,7 +156,7 @@ public class CartProductServiceImpl implements CartProductService {
         if(cart == null){
             //cart yoksa oluşturur.
             BaseResponse<Cart> cartDto = cartService.getCart(userId);
-            cart.setCartId(cartDto.getData().getCartId());
+            cart = cartDto.getData();
         }
         List<CartProduct> cartProductList = cartProductRepository.getCartProduct(cart.getCartId(), CartStatus.NEW);
         List<CartProductGetDto> result = new ArrayList<>();

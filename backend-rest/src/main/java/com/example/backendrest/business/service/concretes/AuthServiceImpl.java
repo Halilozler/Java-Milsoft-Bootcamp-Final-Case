@@ -25,7 +25,8 @@ public class AuthServiceImpl implements AuthService {
         if(cart.isSuccessful() == false){
             return BaseResponse.fail("Couldn't get cart",500);
         }
-        int size = cartProductRepository.getCartProductSizeByCartId(cart.getData().getCartId());
+        Integer cartProductSize = cartProductRepository.getCartProductSizeByCartId(cart.getData().getCartId());
+        int size =  cartProductSize != null ? cartProductSize : 0;
         return BaseResponse.Success(size, 200);
     }
 }

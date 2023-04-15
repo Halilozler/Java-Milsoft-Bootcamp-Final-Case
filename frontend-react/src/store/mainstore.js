@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   username: "",
   email: "",
+  totalPrice: 0,
   catId: 0,
   basketCount: 0,
   cartId: undefined
@@ -42,6 +43,9 @@ export const mainStore = createSlice({
           state.isAuthenticated = false;
           state.user = null;
         },
+        setTotalPriceGlobal: (state, action) => {
+          state.totalPrice = action.payload;
+        }
       },
         extraReducers: (builder) => {
           builder.addCase(fetchUser.fulfilled, (state, action) => {
@@ -52,5 +56,5 @@ export const mainStore = createSlice({
     },
 });
 
-export const { setCatId, incrementBasketCount, setCartId, setLogin, setLogout } = mainStore.actions;
+export const { setCatId, incrementBasketCount, setCartId, setLogin, setLogout, setTotalPriceGlobal } = mainStore.actions;
 export default mainStore.reducer;

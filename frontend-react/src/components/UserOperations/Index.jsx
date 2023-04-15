@@ -6,6 +6,7 @@ import { login, signup } from '../../utils/ApiCommand';
 import { setLogin } from '../../store/mainstore';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import Notification from '../../utils/Notification';
 const Index = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -18,8 +19,9 @@ const Index = () => {
     e.preventDefault();
     // Giriş işlemleri
     login(username, password).then((res) => {
+      console.log(res);
       if(res.successful === false){
-        alert(res.errors);
+        Notification(0, "Kullanıcı adı veya şifre hatalı.")
         return;
       }
       if(rememberMe) {
@@ -27,7 +29,7 @@ const Index = () => {
       } else {
         sessionStorage.setItem("token", res.data.accessToken);
       }
-      alert("Giriş işlemi başarılı.");
+      Notification(1, "Giriş işlemi başarılı.");
       dispatch(setLogin());
       navigator("/");
     }).catch((err) => {
@@ -40,18 +42,14 @@ const Index = () => {
     // Kayıt işlemleri
     signup(username, email, password).then((res) => {
       //tekrar giriş yapılması istenir.
-      alert("Kayıt işlemi başarılı. Giriş yapılıyor.");
+      Notification(1, "Kayıt işlemi başarılı. Giriş yapılıyor.");
       login(username, password).then((res) => {
-        if(res.successful === false){
-          alert(res.errors);
-          return;
-        }
         if(rememberMe) {
           localStorage.setItem("token", res.data.accessToken);
         } else {
           sessionStorage.setItem("token", res.data.accessToken);
         }
-        alert("Giriş işlemi başarılı.");
+        Notification(1, "Giriş Yapıldı.");
         dispatch(setLogin());
         navigator("/");
       });

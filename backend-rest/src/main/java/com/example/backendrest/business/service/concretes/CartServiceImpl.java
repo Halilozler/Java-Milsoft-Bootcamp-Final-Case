@@ -66,19 +66,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public BaseResponse<CartDto> updateCart(CartUpdateDto cartUpdateDto, long userId) {
-        //Optional<Cart> optional = cartRepository.findById(cartUpdateDto.getCartId());
         BaseResponse<Cart> cartDto = getCart(userId);
         if(cartDto.isSuccessful() == false){
             return BaseResponse.fail("An error occurred while receiving the cart",500);
         }
-        /*update edilecek cart usera mı ait
-        Cart cart = cartDto.getData();
-        if(cart.getUsers().getUsersId() != userId){
-            return BaseResponse.fail("unauthorized access",401);
-        }
-         */
         Cart cart = cartRepository.findById(cartDto.getData().getCartId()).get();
         cart.setCardNumber(cartUpdateDto.getCardNumber());
+
+        List<CartProduct> cartProduct = cartProductRepository.getCartProduct(cart.getCartId(), CartStatus.NEW);
+        if(cartProduct.size() >= 1){
+            cart.setCartStatus(CartStatus.COMPLETED);
+            cart.setCreatedDate(Calendar.getInstance().getTime());
+        }
+
         Cart savedCart = cartRepository.save(cart);
         if(savedCart.getCartId() == 0){
             return BaseResponse.fail("cart could not be update",500);

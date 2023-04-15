@@ -22,20 +22,6 @@ public class BackendRestApplication {
         SpringApplication.run(BackendRestApplication.class, args);
     }
 
-    //CQRS
-    @Configuration
-    public class CorsConfiguration {
-        @Bean
-        WebMvcConfigurer corsConfigurer() {
-            return new WebMvcConfigurer() {
-                @Override
-                public void addCorsMappings(CorsRegistry registry) {
-                    registry.addMapping( "/**" );
-                }
-            };
-        }
-    }
-
     //Initial Data
     @Bean
     public CommandLineRunner initData(CategoryRepository categoryRepository, ProductRepository productRepository) {

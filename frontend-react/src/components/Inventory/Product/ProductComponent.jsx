@@ -11,9 +11,11 @@ import { useDispatch, useSelector} from "react-redux";
 import { setCartId, incrementBasketCount} from '../../../store/mainstore';
 import { useNavigate } from 'react-router-dom';
 import { addBasket } from '../../../utils/ApiCommand';
+import Notification from '../../../utils/Notification';
 
 const ProductComponent = () => {
-  const { cartId } = useSelector(state => state.mainStore);
+  const [number , setNumber] = useState(1);
+  const { cartId, basketCount } = useSelector(state => state.mainStore);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,21 +32,41 @@ const ProductComponent = () => {
 
   const changeHandler = () => {
     if(localStorage.getItem("token") === null && sessionStorage.getItem("token") === null){
-      alert("Lütfen giriş yapınız.");
+      Notification(2, "Lütfen giriş yapınız.");
     }
     else{
-      addBasket(productId).then((res) => {
+      addBasket(productId, number).then((res) => {
         console.log(res);
         if(res.successful === false){
-          alert("Ürün sepete eklenemedi. Lütfen daha sonra tekrar deneyiniz.");
+          Notification(0, "Ürün sepete eklenemedi. Lütfen daha sonra tekrar deneyiniz.");
           return;
         }
-        dispatch(incrementBasketCount());
-        alert("Ürün sepete eklendi.");
+        dispatch(incrementBasketCount(basketCount + number));
+        Notification(1, "Ürün sepete eklendi.");
       }).catch((err) => {
         console.log(err.response.data.message);
       });
     }
+  }
+
+  const numberChange = (e) => {
+    if(e.target.value < 1){
+      Notification(2, "Daha fazla eksilemez");
+      return;
+    }
+    setNumber(parseInt(e.target.value));
+  }
+
+  const decrimentNumber = () => {
+    if(number === 1){
+      Notification(2, "Daha fazla eksilemez");
+      return;
+    }
+    setNumber(number - 1);
+  }
+
+  const incrimentNumber = () => {
+    setNumber(number + 1);
   }
 
   return (
@@ -69,7 +91,10 @@ const ProductComponent = () => {
         </Typography>
       </CardContent>
       <CardActions style={{ paddingLeft: "1rem" }}>
-      <Button variant="contained" onClick={changeHandler}>Sepete Ekle</Button>
+          <button className='btn_decriment' style={{margin:0, borderTopLeftRadius: 5, borderBottomLeftRadius: 5, width: 35, height: 35}} onClick={decrimentNumber}> <b>-</b></button>
+            <input type="number" value={number} onChange={numberChange} style={{margin: 0, height: 35, width: 35, textAlign: "center"}}/>
+          <button className='btn_incriment' style={{margin:0, borderTopRightRadius: 5, borderBottomRightRadius: 5, width: 35, height: 35}} onClick={incrimentNumber}> <b>+</b></button>
+        <Button variant="contained" onClick={changeHandler}>Sepete Ekle</Button>
       </CardActions>
       </div>
     </Card>

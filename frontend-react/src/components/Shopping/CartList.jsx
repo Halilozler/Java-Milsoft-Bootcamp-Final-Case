@@ -12,12 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 //sepetimiza eklediğimiz ürünleri göstermek için kullanılan component
-export default function CartList({ cart, imageUrl }) {
-    const [products, setProducts] = useState([]);
-
-    useEffect(() => {
-
-    }, []);
+export default function CartList({ cart, imageUrl, deleteCart, decrimentCount, incrementCount, deleteCartProduct }) {
 
     return (
         <>
@@ -40,21 +35,25 @@ export default function CartList({ cart, imageUrl }) {
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row" style={{ display: "flex" }}>
-                                            <IconButton aria-label="delete" style={{ color: "red", height: "100%" }}>
+                                            <IconButton aria-label="delete" style={{ color: "red", height: "100%" }} onClick={() => deleteCartProduct(row)}>
                                                 <DeleteIcon style={{ width: 20 }} />
                                             </IconButton>
                                             <img src={imageUrl} alt={imageUrl} style={{ width: 50 }} />
                                             <p style={{ margin: 0, marginLeft: "0.5rem" }}>{row.product.productName}</p>
                                         </TableCell>
                                         <TableCell align="right">{row.product.salesPrice}</TableCell>
-                                        <TableCell align="right">{row.salesQuantity}</TableCell>
+                                        <TableCell align="right">
+                                            <button className='btn_decriment' onClick={() => decrimentCount(row)}> <b>-</b></button>
+                                            {row.salesQuantity}
+                                            <button className='btn_incriment' onClick={() => incrementCount(row)}> <b>+</b></button>
+                                        </TableCell>
                                         <TableCell align="right"><b>{row.salesQuantity * row.product.salesPrice} ₺</b></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Button variant="outlined" style={{ color: "red", borderColor: "red" }} startIcon={<DeleteIcon />}>
+                    <Button variant="outlined" style={{ color: "red", borderColor: "red" }} startIcon={<DeleteIcon />} onClick={deleteCart}>
                         Sepeti Boşalt
                     </Button>
                 </>

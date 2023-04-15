@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux"
-import { fetchUser, setLogout } from '../../store/mainstore';
+import { fetchUser, setLogout, incrementBasketCount } from '../../store/mainstore';
 
 
 const Profile = () => {
@@ -26,6 +26,7 @@ const Profile = () => {
     const exit = () => {
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
+        dispatch(incrementBasketCount(0))
         dispatch(setLogout());
         navigate(`/`);
     }
