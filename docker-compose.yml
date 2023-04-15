@@ -15,15 +15,16 @@ services:
       - app-network
   spring-app:
     build: ./backend-rest
+    restart: always
     ports:
       - "8080:8080"
+    depends_on:
+      - db
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/godorodb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=mysecretpassword
-    depends_on:
-      - db
     networks:
       - app-network
 
