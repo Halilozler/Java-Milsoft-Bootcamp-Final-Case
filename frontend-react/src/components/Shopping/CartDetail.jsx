@@ -22,7 +22,8 @@ const CartDetail = () => {
     })
   }, [])
   useEffect(() => {
-    setTotalPrice(cart.reduce((a, b) => a + (b.salesQuantity * b.product.salesPrice), 0).toFixed(2));
+    setTotalPrice(parseFloat(cart.reduce((a, b) => a + (b.salesQuantity * b.product.salesPrice), 0).toFixed(2)));
+
   }, [cart])
   const getCartCheckout = () => {
     dispatch(setTotalPriceGlobal(totalPrice));

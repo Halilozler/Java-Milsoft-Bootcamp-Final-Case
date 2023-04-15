@@ -42,12 +42,14 @@ export default function CartList({ cart, imageUrl, deleteCart, decrimentCount, i
                                             <p style={{ margin: 0, marginLeft: "0.5rem" }}>{row.product.productName}</p>
                                         </TableCell>
                                         <TableCell align="right">{row.product.salesPrice}</TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="right" >
+                                            <div style={{display: "flex"}}>
                                             <button className='btn_decriment' onClick={() => decrimentCount(row)}> <b>-</b></button>
                                             {row.salesQuantity}
                                             <button className='btn_incriment' onClick={() => incrementCount(row)}> <b>+</b></button>
+                                            </div>
                                         </TableCell>
-                                        <TableCell align="right"><b>{row.salesQuantity * row.product.salesPrice} ₺</b></TableCell>
+                                        <TableCell align="right"><b>{parseFloat((row.salesQuantity * row.product.salesPrice).toFixed(2))} ₺</b></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

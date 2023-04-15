@@ -11,6 +11,8 @@ const Index = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginUserName, setLoginUserName] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const navigator = useNavigate();
   const dispatch = useDispatch();
@@ -18,7 +20,7 @@ const Index = () => {
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     // Giriş işlemleri
-    login(username, password).then((res) => {
+    login(loginUserName, loginPassword).then((res) => {
       console.log(res);
       if(res.successful === false){
         Notification(0, "Kullanıcı adı veya şifre hatalı.")
@@ -44,11 +46,7 @@ const Index = () => {
       //tekrar giriş yapılması istenir.
       Notification(1, "Kayıt işlemi başarılı. Giriş yapılıyor.");
       login(username, password).then((res) => {
-        if(rememberMe) {
-          localStorage.setItem("token", res.data.accessToken);
-        } else {
-          sessionStorage.setItem("token", res.data.accessToken);
-        }
+        sessionStorage.setItem("token", res.data.accessToken);
         Notification(1, "Giriş Yapıldı.");
         dispatch(setLogin());
         navigator("/");
@@ -75,16 +73,16 @@ const Index = () => {
               title={"Kullanıcı Adı"}
               type={"text"}
               width={285}
-              state={username}
-              setState={setUsername}
+              state={loginUserName}
+              setState={setLoginUserName}
               minLength={3}
             />
             <InputTools
               title={"Şifre"}
               type={"password"}
               width={285}
-              state={password}
-              setState={setPassword}
+              state={loginPassword}
+              setState={setLoginPassword}
               minLength={3}
             />
             <CheckBoxTool1 text={"Beni Hatırla"} setState={setRememberMe}/>
