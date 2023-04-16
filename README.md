@@ -43,7 +43,7 @@ kurulum bittikten sonra http://localhost:3000 web sitesine giderek uygulamayı k
 ***(del)(+) api/cart/remove/{productId}*** -> cart_product içinden NEW statülü carta bağlı productı bulur ve satırı tamamen siler. <br/>
 ***(del)(+) api/cart/remove/quantity/{productId}*** -> cart_product içinden NEW statülü carta bağlı product bulur ve cart_product içinde bulunan salesQuantity tablosundaki değeri eğer 1 değilse 1 düşürür. <br/>
 ***(post)(+) api/cart/add/{productId}/{salesQuantity}*** -> cart_product içinden Kullanıcın NEW sepetini bulur ve cart - product satır varmı bakar. eğer yoksa salesQuantity doldurarak oluşturur. Eğer var ise salesQuantity satırını gelen sayıya göre artırır. <br/>
-***(put)(+) api/cart/checkout*** -> Bizim uygulamamızda cart oluşurken otomatik Kard numarası(CardNumber) atanmaktadır. Kullanıcı bu Kart numarasını değiştirmek isterse bu endpoint ile gerçekleştiri. Body: {"cartId":..., "cardNumber":...} Burada cartId önemsizdir zaten token içinden userId aracılığı ile kullanıcı sepetine erişiyoruz. <br/>
+***(put)(+) api/cart/checkout*** -> Bizim uygulamamızda cart oluşurken otomatik Kard numarası(CardNumber) atanmaktadır. Kullanıcı bu Kart numarasını değiştirmek isterse bu endpoint ile gerçekleştirir. Bu sepete onaylama aşaması yani kredi kartı ile ödeme sayfası olduğundan dolayı NEW olan sepetimizi(cart) COMPLETE çeker ve ürün sipariş verilmiş gibi gösterilir. Body: {"cartId":..., "cardNumber":...} Burada cartId önemsizdir zaten token içinden userId aracılığı ile kullanıcı sepetine erişiyoruz. <br/>
  
 ## Resimler
 
