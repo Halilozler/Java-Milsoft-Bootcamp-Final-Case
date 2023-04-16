@@ -44,6 +44,12 @@ kurulum bittikten sonra http://localhost:3000 web sitesine giderek uygulamayı k
 ***(del)(+) api/cart/remove/quantity/{productId}*** -> cart_product içinden NEW statülü carta bağlı product bulur ve cart_product içinde bulunan salesQuantity tablosundaki değeri eğer 1 değilse 1 düşürür. <br/>
 ***(post)(+) api/cart/add/{productId}/{salesQuantity}*** -> cart_product içinden Kullanıcın NEW sepetini bulur ve cart - product satır varmı bakar. eğer yoksa salesQuantity doldurarak oluşturur. Eğer var ise salesQuantity satırını gelen sayıya göre artırır. <br/>
 ***(put)(+) api/cart/checkout*** -> Bizim uygulamamızda cart oluşurken otomatik Kard numarası(CardNumber) atanmaktadır. Kullanıcı bu Kart numarasını değiştirmek isterse bu endpoint ile gerçekleştirir. Bu sepete onaylama aşaması yani kredi kartı ile ödeme sayfası olduğundan dolayı NEW olan sepetimizi(cart) COMPLETE çeker ve ürün sipariş verilmiş gibi gösterilir. Body: {"cartId":..., "cardNumber":...} Burada cartId önemsizdir zaten token içinden userId aracılığı ile kullanıcı sepetine erişiyoruz. <br/>
+
+## Backend-Rest Spring Boot
+Kendi içinde loglama yapısı bulunmaktadır. <br/>
+Bizim yazdığımız BaseResponse sınıfı ile geriye veri döndürmektedir. <br/>
+Global Exception ile hatalar tek bir yerden yakalanmaktadır. <br/>
+Token işlemleri yapılmaktadır. <br/>
  
 ## Resimler(Frontend-React Tarafı)
 Ana Sayfamız <br/>
