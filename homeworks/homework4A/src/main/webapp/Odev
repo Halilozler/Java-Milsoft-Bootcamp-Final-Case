@@ -1,0 +1,9 @@
+HW4A
+1. Login.jsp sayfası yapın. Bir formda username ve password alsın.
+Form gönderilince username:godoro  & password:java ise session'a username'i 
+koysun ve Home.jsp diye bir sayfaya yönlendirsin. Değerler böyle değilse bir message göstersin.
+2. Home.jsp sayfası yapın. Session'da username alsın. Yoksa Login.jsp'ye yönlendirsin. 
+Varsa ekranda Hoşgeldin <username> desin.
+3. Logout.jsp diye bir sayfa yapın. Yüklenirken session'daki username değerine null versin 
+ve Login.jsp sayfasına yönlendirsin. Bu sayfaya Home.jsp içinde "Çık" diye bir link koyun.
+4. Tüm giriş-çıkış sürecini sınayın.
