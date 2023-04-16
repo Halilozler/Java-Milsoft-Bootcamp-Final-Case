@@ -45,7 +45,36 @@ kurulum bittikten sonra http://localhost:3000 web sitesine giderek uygulamayı k
 ***(post)(+) api/cart/add/{productId}/{salesQuantity}*** -> cart_product içinden Kullanıcın NEW sepetini bulur ve cart - product satır varmı bakar. eğer yoksa salesQuantity doldurarak oluşturur. Eğer var ise salesQuantity satırını gelen sayıya göre artırır. <br/>
 ***(put)(+) api/cart/checkout*** -> Bizim uygulamamızda cart oluşurken otomatik Kard numarası(CardNumber) atanmaktadır. Kullanıcı bu Kart numarasını değiştirmek isterse bu endpoint ile gerçekleştirir. Bu sepete onaylama aşaması yani kredi kartı ile ödeme sayfası olduğundan dolayı NEW olan sepetimizi(cart) COMPLETE çeker ve ürün sipariş verilmiş gibi gösterilir. Body: {"cartId":..., "cardNumber":...} Burada cartId önemsizdir zaten token içinden userId aracılığı ile kullanıcı sepetine erişiyoruz. <br/>
  
-## Resimler
+## Resimler(Frontend-React Tarafı)
+Ana Sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 44 14" src="https://user-images.githubusercontent.com/45699509/232287857-94810cb7-659c-4d2d-b9dd-83e5a7e2edd6.png"> <br/>
+Eğer olmayan bir url gitiğimizde 404 sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 45 25" src="https://user-images.githubusercontent.com/45699509/232287887-e80a9c23-29c8-4397-892a-943d65968359.png"> <br/>
+Giriş ve Üye olma sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 45 01" src="https://user-images.githubusercontent.com/45699509/232287964-a66f2587-3537-4cc0-9e63-b7c9ccaad97b.png"> <br/>
+Giriş yaptıktan sonra Navbar değişir ve Profil sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 47 09" src="https://user-images.githubusercontent.com/45699509/232288010-375651d5-3e93-4ade-9ba9-24b057c8950c.png"> <br/>
+Kategori altında ürünler sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 46 20" src="https://user-images.githubusercontent.com/45699509/232288048-cd5ef35f-9005-4d16-b4fa-93785a00f6e6.png"> <br/>
+Ürüne özel sayfamız <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 46 37" src="https://user-images.githubusercontent.com/45699509/232288072-c808cf7f-02a7-4cea-8773-18399dea9df8.png"> <br/>
+Ürün sepete eklendiğinde çıkan bildirim. Bütün işlemler için bildirim çıkmaktadır. <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 50 37" src="https://user-images.githubusercontent.com/45699509/232288102-5934c985-9601-49ab-a061-03c13433fde7.png"> <br/>
+Sepetimiz <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 48 06" src="https://user-images.githubusercontent.com/45699509/232288120-5e86bdc1-c310-4ec8-af1b-97b5db70771b.png"> <br/>
+Ödeme sayfamız: <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 48 36" src="https://user-images.githubusercontent.com/45699509/232288141-3e3df292-70bd-4cb4-b034-3554507109a8.png"> <br/>
+Ödeme yap butonuna bastıktan sonra temsili çıkan bekleme ekranı(2 saniye bekletir) <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 49 33" src="https://user-images.githubusercontent.com/45699509/232288187-168fa5cb-6780-48c2-a972-9fd63cd36f60.png"> <br/>
+Profil sayfasında eriştiğimiz Geçmiş Siparişler sayfası <br/>
+<img width="600" alt="Screenshot 2023-04-16 at 11 50 25" src="https://user-images.githubusercontent.com/45699509/232288216-2442d9ae-1a7d-4477-9aec-b641d71db475.png">
+
+
+
+
+
+
+
 
 
 
