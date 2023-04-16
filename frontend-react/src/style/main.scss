@@ -20,6 +20,7 @@ input[type="number"] {
 .appScreen{
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 
     .hide_scrollbar::-webkit-scrollbar {
       display: none;
